@@ -24,4 +24,6 @@ jobs:
       - name: Run Playwright E2E Tests
         run: npm run test:e2e
         env:
+          NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY: ${{ secrets.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY }}
+          CLERK_SECRET_KEY: ${{ secrets.CLERK_SECRET_KEY }}
           NEXT_PUBLIC_CLERK_TESTING_TOKEN: "token_here"
