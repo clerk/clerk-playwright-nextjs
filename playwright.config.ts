@@ -44,10 +44,15 @@ export default defineConfig({
 
   projects: [
     {
+      name: 'global setup',
+      testMatch: /global\.setup\.ts/,
+    },
+    {
       name: "Desktop Chrome",
       use: {
         ...devices["Desktop Chrome"],
       },
+      dependencies: ["global setup"],
     },
   ],
 });
