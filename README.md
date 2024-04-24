@@ -36,3 +36,7 @@ npx playwright install-deps
 ```bash
 npm run test:e2e
 ```
+
+### Run the GitHub Actions workflow
+
+To run the GitHub Actions workflow, you need to set the env variables mentioned above in the repository secrets. Then, you can trigger the workflow manually.
