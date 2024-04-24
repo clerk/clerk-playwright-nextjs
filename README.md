@@ -1,9 +1,9 @@
 # Next.js + Playwright + Clerk
 
 This example uses:
-- Next.js 14.2.2
-- Playwright 1.43.1
-- Clerk 5.0.2 (Core 2)
+- Next.js 14.x
+- Playwright 1.x
+- Clerk (Core 2)
 
 ### Getting Started
 
