@@ -3,7 +3,7 @@
 This example uses:
 - Next.js 14.2.2
 - Playwright 1.43.1
-- Clerk 5.0.1 (Core 2)
+- Clerk 5.0.2 (Core 2)
 
 ### Getting Started
 
