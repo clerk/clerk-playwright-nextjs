@@ -9,13 +9,13 @@
     "test:e2e": "playwright test"
   },
   "dependencies": {
-    "@clerk/nextjs": "^5.0.1",
+    "@clerk/nextjs": "^5.0.2",
     "next": "14.2.2",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
   },
   "devDependencies": {
-    "@clerk/testing": "^0.1.0-snapshot.v1b21f39",
+    "@clerk/testing": "^1.0.0",
     "@playwright/test": "^1.43.1",
     "@types/node": "20.12.7",
     "@types/react": "18.2.79",
