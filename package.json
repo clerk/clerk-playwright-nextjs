@@ -1,4 +1,6 @@
 {
+  "name": "playwright-clerk-nextjs-example",
+  "version": "0.0.1",
   "private": true,
   "scripts": {
     "dev": "next dev",
@@ -8,15 +10,15 @@
   },
   "dependencies": {
     "@clerk/nextjs": "^5.0.1",
-    "@clerk/playwright": "file:.yalc/@clerk/playwright",
-    "next": "14.1.4",
+    "next": "14.2.2",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
   },
   "devDependencies": {
-    "@playwright/test": "^1.40.1",
-    "@types/node": "20.10.4",
-    "@types/react": "18.2.45",
-    "typescript": "5.3.3"
+    "@clerk/testing": "^0.1.0-snapshot.v1b21f39",
+    "@playwright/test": "^1.43.1",
+    "@types/node": "20.12.7",
+    "@types/react": "18.2.79",
+    "typescript": "5.4.5"
   }
 }
