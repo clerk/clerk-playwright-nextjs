@@ -39,4 +39,14 @@ npm run test:e2e
 
 ### Run the GitHub Actions workflow
 
-To run the GitHub Actions workflow, you need to set the env variables mentioned above in the repository secrets. Then, you can trigger the workflow manually.
+To run the GitHub Actions workflow, you need to set the env variables mentioned above in the repository environment variables. Then, you can trigger the workflow manually.
+
+```shell
+# secrets
+CLERK_SECRET_KEY
+E2E_CLERK_USER_USERNAME
+E2E_CLERK_USER_PASSWORD
+
+# vars
+NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY
+```
