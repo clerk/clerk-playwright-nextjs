@@ -1,7 +1,7 @@
 import { clerkSetup } from "@clerk/testing/playwright";
-import { test } from "@playwright/test";
+import { test as setup } from "@playwright/test";
 
-test("global setup", async ({}) => {
+setup("global setup", async ({}) => {
   await clerkSetup();
 
   if (
