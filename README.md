@@ -1,13 +1,14 @@
 # Next.js + Playwright + Clerk
 
 This example uses:
+
 - Next.js 14.x
 - Playwright 1.x
 - Clerk (Core 2)
 
 ### Getting Started
 
-To run this example as is, you will need dev instance keys, a dummy user with username and password, and only enabled username and password in the Clerk Dashboard.
+To run the current example test, you'll need dev instance keys, a test user with username and password, and have `username` and `password` authentication enabled in the Clerk Dashboard.
 
 You need the following environment variables in the `.env.local` file:
 
@@ -39,7 +40,7 @@ npm run test:e2e
 
 ### Run the GitHub Actions workflow
 
-To run the GitHub Actions workflow, you need to set the env variables mentioned above in the repository environment variables. Then, you can trigger the workflow manually.
+To run the **GitHub Actions** workflow, set the environment variables in the repository settings. After that, manually trigger the workflow from the **GitHub Actions** tab.
 
 ```shell
 # secrets
