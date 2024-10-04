@@ -27,13 +27,24 @@ export default defineConfig({
 
   projects: [
     {
-      name: 'global setup',
+      name: "global setup",
       testMatch: /global\.setup\.ts/,
     },
     {
-      name: "Desktop Chrome",
+      name: "Main tests",
+      testMatch: /.*app.spec.ts/,
       use: {
         ...devices["Desktop Chrome"],
+      },
+      dependencies: ["global setup"],
+    },
+    {
+      name: "Authenticated tests",
+      testMatch: /.*authenticated.spec.ts/,
+      use: {
+        ...devices["Desktop Chrome"],
+        // Use prepared auth state.
+        storageState: "playwright/.clerk/user.json",
       },
       dependencies: ["global setup"],
     },

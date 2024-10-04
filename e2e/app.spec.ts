@@ -1,7 +1,7 @@
 import { clerk, setupClerkTestingToken } from "@clerk/testing/playwright";
 import { test, expect } from "@playwright/test";
 
-test.describe("app", () => {
+test.describe("main tests", () => {
   test("sign in", async ({ page }) => {
     await setupClerkTestingToken({ page });
 
