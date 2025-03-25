@@ -2,9 +2,13 @@ import { clerk, clerkSetup } from "@clerk/testing/playwright";
 import { test as setup } from "@playwright/test";
 import path from "path";
 
-setup("global setup", async ({}) => {
-  await clerkSetup();
+// Ensures that Clerk setup is done before any tests run
+setup.describe.configure({
+  mode: "serial",
+});
 
+setup("global setup", async () => {
+  await clerkSetup();
   if (
     !process.env.E2E_CLERK_USER_USERNAME ||
     !process.env.E2E_CLERK_USER_PASSWORD
@@ -23,7 +27,9 @@ setup("authenticate", async ({ page }) => {
     page,
     signInParams: {
       strategy: "password",
-      identifier: process.env.E2E_CLERK_USER_USERNAME!,
+      identifier:
+        process.env.E2E_CLERK_USER_USERNAME ||
+        process.env.E2E_CLERK_USER_EMAIL!,
       password: process.env.E2E_CLERK_USER_PASSWORD!,
     },
   });
