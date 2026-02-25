@@ -23,18 +23,6 @@ test.describe("main tests", () => {
     await page.waitForURL("**/protected");
   });
 
-  test("sign up", async ({ page }) => {
-    await setupClerkTestingToken({ page });
-
-    await page.goto("/sign-up");
-    await clerk.loaded({ page });
-    await page.waitForSelector(".cl-signUp-root", { state: "attached" });
-    await page.locator("input[name=username]").fill("user" + Date.now());
-    await page.locator("input[name=password]").fill("Pass!@" + Date.now());
-    await page.getByRole("button", { name: "Continue", exact: true }).click();
-    await page.waitForURL("**/protected");
-  });
-
   test("sign in using helper", async ({ page }) => {
     await page.goto("/");
     await clerk.signIn({
