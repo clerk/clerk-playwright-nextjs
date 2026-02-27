@@ -2,9 +2,9 @@
 
 This example uses:
 
-- Next.js 14.x
+- Next.js 16.x
 - Playwright 1.x
-- Clerk (Core 2)
+- Clerk (NextJS 6.x)
 
 ### Getting Started
 
