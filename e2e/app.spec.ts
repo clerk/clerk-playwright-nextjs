@@ -11,15 +11,17 @@ test.describe.configure({
 // Test user info is saved here so teardown can clean up created users.
 const testUsersFile = path.join(__dirname, "../playwright/.clerk/signup-user.json");
 
-test.describe("main tests", () => {
-  // Track users created during this run for teardown cleanup
-  const createdUsers: { userId: string; email: string }[] = [];
+// Persist created user info to disk immediately so teardown can
+// clean up even if the run is killed before all tests complete.
+function trackCreatedUser(userId: string, email: string) {
+  const existing: { userId: string; email: string }[] = fs.existsSync(testUsersFile)
+    ? JSON.parse(fs.readFileSync(testUsersFile, "utf-8"))
+    : [];
+  existing.push({ userId, email });
+  fs.writeFileSync(testUsersFile, JSON.stringify(existing));
+}
 
-  test.afterAll(async () => {
-    if (createdUsers.length > 0) {
-      fs.writeFileSync(testUsersFile, JSON.stringify(createdUsers));
-    }
-  });
+test.describe("main tests", () => {
 
   test("sign up", async ({ page }) => {
     await setupClerkTestingToken({ page });
@@ -68,11 +70,11 @@ test.describe("main tests", () => {
       .pressSequentially("424242");
     await page.waitForURL("**/protected");
 
-    // Track for teardown cleanup
+    // Persist immediately for teardown cleanup
     const userId = await page.evaluate(
       () => (window as any).Clerk?.user?.id,
     );
-    createdUsers.push({ userId, email: signUpEmail });
+    trackCreatedUser(userId, signUpEmail);
   });
 
   test("sign in", async ({ page }) => {
@@ -90,7 +92,7 @@ test.describe("main tests", () => {
       firstName: "Test",
       lastName: "User",
     });
-    createdUsers.push({ userId: user.id, email: signInEmail });
+    trackCreatedUser(user.id, signInEmail);
 
     // Sign in via the UI to demonstrate the +clerk_test / 424242 pattern
     await page.goto("/sign-in");
