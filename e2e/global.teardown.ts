@@ -10,11 +10,24 @@ teardown("cleanup sign-up test user", async () => {
     return;
   }
 
-  const { userId } = JSON.parse(fs.readFileSync(signUpUserFile, "utf-8"));
+  const { userId, email } = JSON.parse(
+    fs.readFileSync(signUpUserFile, "utf-8"),
+  );
   const client = createClerkClient({
     secretKey: process.env.CLERK_SECRET_KEY!,
   });
 
-  await client.users.deleteUser(userId).catch(() => {});
-  fs.unlinkSync(signUpUserFile);
+  try {
+    await client.users.deleteUser(userId);
+    fs.unlinkSync(signUpUserFile);
+  } catch {
+    // If delete by ID fails, try by email as fallback
+    const { data: users } = await client.users.getUserList({
+      emailAddress: [email],
+    });
+    for (const user of users) {
+      await client.users.deleteUser(user.id);
+    }
+    fs.unlinkSync(signUpUserFile);
+  }
 });

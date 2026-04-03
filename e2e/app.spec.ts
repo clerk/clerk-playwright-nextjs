@@ -16,6 +16,9 @@ const signUpUserFile = path.join(__dirname, "../playwright/.clerk/signup-user.js
 const signUpEmail = `e2e-signup-${Date.now()}+clerk_test@example.com`;
 
 test.describe("main tests", () => {
+  // The sign-up and sign-in tests run in serial mode and are intentionally
+  // coupled: sign-up creates a user, then sign-in uses that same user to
+  // demonstrate the full authentication lifecycle with +clerk_test / 424242.
   test("sign up", async ({ page }) => {
     await setupClerkTestingToken({ page });
 
@@ -44,13 +47,14 @@ test.describe("main tests", () => {
     if (await legalCheckbox.isVisible()) {
       await legalCheckbox.check();
     }
-    await page.getByRole("button", { name: "Continue", exact: true }).click();
 
-    // Wait for Clerk to prepare the email verification
-    await page.waitForResponse(
+    // Start waiting for the verification response before clicking to avoid a race
+    const verificationResponse = page.waitForResponse(
       (resp) =>
         resp.url().includes("prepare_verification") && resp.status() === 200,
     );
+    await page.getByRole("button", { name: "Continue", exact: true }).click();
+    await verificationResponse;
 
     // Enter test OTP code (424242 works with +clerk_test emails)
     await page
@@ -58,11 +62,14 @@ test.describe("main tests", () => {
       .pressSequentially("424242");
     await page.waitForURL("**/protected");
 
-    // Save the created user's ID so teardown can clean it up
+    // Save the created user's info so teardown can clean it up
     const userId = await page.evaluate(
       () => (window as any).Clerk?.user?.id,
     );
-    fs.writeFileSync(signUpUserFile, JSON.stringify({ userId }));
+    fs.writeFileSync(
+      signUpUserFile,
+      JSON.stringify({ userId, email: signUpEmail }),
+    );
   });
 
   test("sign in", async ({ page }) => {
@@ -76,13 +83,14 @@ test.describe("main tests", () => {
     await page
       .locator("input[name=password]")
       .fill(process.env.E2E_CLERK_USER_PASSWORD!);
-    await page.getByRole("button", { name: "Continue", exact: true }).click();
 
-    // Wait for Clerk to prepare the second factor verification
-    await page.waitForResponse(
+    // Start waiting for the second factor response before clicking to avoid a race
+    const secondFactorResponse = page.waitForResponse(
       (resp) =>
         resp.url().includes("prepare_second_factor") && resp.status() === 200,
     );
+    await page.getByRole("button", { name: "Continue", exact: true }).click();
+    await secondFactorResponse;
 
     // Enter test OTP code (424242 works with +clerk_test emails)
     await page
