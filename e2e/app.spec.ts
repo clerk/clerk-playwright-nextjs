@@ -1,4 +1,5 @@
 import { clerk, setupClerkTestingToken } from "@clerk/testing/playwright";
+import { createClerkClient } from "@clerk/backend";
 import { test } from "@playwright/test";
 import fs from "fs";
 import path from "path";
@@ -7,20 +8,25 @@ test.describe.configure({
   mode: "serial",
 });
 
-// The sign-up test writes the created user's info here so the sign-in
-// test can reuse it, and teardown can clean it up.
-const signUpUserFile = path.join(__dirname, "../playwright/.clerk/signup-user.json");
-
-// Unique email per run so concurrent runs on the same instance don't collide.
-// Uses +clerk_test so 424242 works as the verification code.
-const signUpEmail = `e2e-signup-${Date.now()}+clerk_test@example.com`;
+// Test user info is saved here so teardown can clean up created users.
+const testUsersFile = path.join(__dirname, "../playwright/.clerk/signup-user.json");
 
 test.describe("main tests", () => {
-  // The sign-up and sign-in tests run in serial mode and are intentionally
-  // coupled: sign-up creates a user, then sign-in uses that same user to
-  // demonstrate the full authentication lifecycle with +clerk_test / 424242.
+  // Track users created during this run for teardown cleanup
+  const createdUsers: { userId: string; email: string }[] = [];
+
+  test.afterAll(async () => {
+    if (createdUsers.length > 0) {
+      fs.writeFileSync(testUsersFile, JSON.stringify(createdUsers));
+    }
+  });
+
   test("sign up", async ({ page }) => {
     await setupClerkTestingToken({ page });
+
+    // Unique email per run so concurrent runs don't collide.
+    // Uses +clerk_test so 424242 works as the verification code.
+    const signUpEmail = `e2e-signup-${Date.now()}+clerk_test@example.com`;
 
     await page.goto("/sign-up");
     await page.waitForSelector(".cl-signUp-root", { state: "attached" });
@@ -62,23 +68,34 @@ test.describe("main tests", () => {
       .pressSequentially("424242");
     await page.waitForURL("**/protected");
 
-    // Save the created user's info so teardown can clean it up
+    // Track for teardown cleanup
     const userId = await page.evaluate(
       () => (window as any).Clerk?.user?.id,
     );
-    fs.writeFileSync(
-      signUpUserFile,
-      JSON.stringify({ userId, email: signUpEmail }),
-    );
+    createdUsers.push({ userId, email: signUpEmail });
   });
 
   test("sign in", async ({ page }) => {
     await setupClerkTestingToken({ page });
 
-    // Sign in with the user created in the sign-up test
+    // Create a dedicated test user for this sign-in test via the Backend API
+    // so this test can run independently of the sign-up test
+    const signInEmail = `e2e-signin-${Date.now()}+clerk_test@example.com`;
+    const client = createClerkClient({
+      secretKey: process.env.CLERK_SECRET_KEY!,
+    });
+    const user = await client.users.createUser({
+      emailAddress: [signInEmail],
+      password: process.env.E2E_CLERK_USER_PASSWORD!,
+      firstName: "Test",
+      lastName: "User",
+    });
+    createdUsers.push({ userId: user.id, email: signInEmail });
+
+    // Sign in via the UI to demonstrate the +clerk_test / 424242 pattern
     await page.goto("/sign-in");
     await page.waitForSelector(".cl-signIn-root", { state: "attached" });
-    await page.locator("input[name=identifier]").fill(signUpEmail);
+    await page.locator("input[name=identifier]").fill(signInEmail);
     await page.getByRole("button", { name: "Continue", exact: true }).click();
     await page
       .locator("input[name=password]")

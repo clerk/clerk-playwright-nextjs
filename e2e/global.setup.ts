@@ -39,25 +39,27 @@ setup("global setup", async () => {
     });
   }
 
-  // Clean up a stale sign-up test user from a previous run that was
+  // Clean up stale test users from a previous run that was
   // killed before teardown could run
   if (fs.existsSync(signUpUserFile)) {
-    const { userId, email } = JSON.parse(
-      fs.readFileSync(signUpUserFile, "utf-8"),
-    );
-    try {
-      await client.users.deleteUser(userId);
-      fs.unlinkSync(signUpUserFile);
-    } catch {
-      // If delete fails (e.g., user already deleted), try by email as fallback
-      const { data: staleUsers } = await client.users.getUserList({
-        emailAddress: [email],
-      });
-      for (const user of staleUsers) {
-        await client.users.deleteUser(user.id);
+    const data = JSON.parse(fs.readFileSync(signUpUserFile, "utf-8"));
+    const staleUsers: { userId: string; email: string }[] = Array.isArray(data)
+      ? data
+      : [data];
+
+    for (const { userId, email } of staleUsers) {
+      try {
+        await client.users.deleteUser(userId);
+      } catch {
+        const { data: found } = await client.users.getUserList({
+          emailAddress: [email],
+        });
+        for (const user of found) {
+          await client.users.deleteUser(user.id);
+        }
       }
-      fs.unlinkSync(signUpUserFile);
     }
+    fs.unlinkSync(signUpUserFile);
   }
 });
 
