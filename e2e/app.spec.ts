@@ -21,6 +21,16 @@ function trackCreatedUser(userId: string, email: string) {
   fs.writeFileSync(testUsersFile, JSON.stringify(existing));
 }
 
+function updateTrackedUser(email: string, userId: string) {
+  if (!fs.existsSync(testUsersFile)) return;
+  const existing: { userId: string; email: string }[] = JSON.parse(
+    fs.readFileSync(testUsersFile, "utf-8"),
+  );
+  const entry = existing.find((u) => u.email === email);
+  if (entry) entry.userId = userId;
+  fs.writeFileSync(testUsersFile, JSON.stringify(existing));
+}
+
 test.describe("main tests", () => {
 
   test("sign up", async ({ page }) => {
@@ -56,6 +66,10 @@ test.describe("main tests", () => {
       await legalCheckbox.check();
     }
 
+    // Track for cleanup before submitting — if the test crashes after sign-up
+    // but before we can read the userId, teardown uses the email as fallback
+    trackCreatedUser("", signUpEmail);
+
     // Start waiting for the verification response before clicking to avoid a race
     const verificationResponse = page.waitForResponse(
       (resp) =>
@@ -70,11 +84,11 @@ test.describe("main tests", () => {
       .pressSequentially("424242");
     await page.waitForURL("**/protected");
 
-    // Persist immediately for teardown cleanup
+    // Update the tracked entry with the actual userId for faster cleanup
     const userId = await page.evaluate(
       () => (window as any).Clerk?.user?.id,
     );
-    trackCreatedUser(userId, signUpEmail);
+    updateTrackedUser(signUpEmail, userId);
   });
 
   test("sign in", async ({ page }) => {
