@@ -4,7 +4,7 @@ This example uses:
 
 - Next.js 16.x
 - Playwright 1.x
-- Clerk (NextJS 6.x)
+- Clerk (NextJS 7.x)
 
 ### Getting Started
 

@@ -10,18 +10,17 @@
     "test:e2e": "playwright test"
   },
   "dependencies": {
-    "@clerk/nextjs": "^6.38.2",
-    "@clerk/types": "^4.101.18",
-    "next": "^16.1.6",
+    "@clerk/nextjs": "^7.0.8",
+    "next": "^16.2.2",
     "react": "^19.2.4",
     "react-dom": "^19.2.4"
   },
   "devDependencies": {
     "@clerk/backend": "^3.2.4",
-    "@clerk/testing": "^1.14.1",
-    "@playwright/test": "^1.58.2",
-    "@types/node": "^25.3.0",
+    "@clerk/testing": "^2.0.8",
+    "@playwright/test": "^1.59.1",
+    "@types/node": "^25.5.2",
     "@types/react": "^19.2.14",
-    "typescript": "^5.9.3"
+    "typescript": "^6.0.2"
   }
 }
