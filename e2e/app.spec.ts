@@ -4,10 +4,6 @@ import { test } from "@playwright/test";
 import fs from "fs";
 import path from "path";
 
-test.describe.configure({
-  mode: "serial",
-});
-
 // Test user info is saved here so teardown can clean up created users.
 const testUsersFile = path.join(__dirname, "../playwright/.clerk/signup-user.json");
 
