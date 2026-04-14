@@ -51,6 +51,10 @@ test.describe("main tests", () => {
     if (await usernameField.isVisible()) {
       await usernameField.fill(`e2e-signup-${Date.now()}`);
     }
+    const phoneField = page.locator("input[name=phoneNumber]");
+    if (await phoneField.isVisible()) {
+      await phoneField.fill("+15555550100");
+    }
     // Fill email with +clerk_test so 424242 works as the verification code
     await page.locator("input[name=emailAddress]").fill(signUpEmail);
     await page
