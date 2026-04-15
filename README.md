@@ -4,20 +4,18 @@ This example uses:
 
 - Next.js 16.x
 - Playwright 1.x
-- Clerk (NextJS 6.x)
+- Clerk (NextJS 7.x)
 
 ### Getting Started
 
-To run the current example test, you'll need dev instance keys, a test user with username and password, and have `username` and `password` authentication enabled in the Clerk Dashboard.
+To run the current example test, you'll need dev instance keys and have `email` and `password` authentication enabled in the Clerk Dashboard. A test user is created automatically during setup.
 
-You need the following environment variables in the `.env.local` file:
+### Set up environment variables
+
+Copy `.env.local.example` to `.env.local` and fill in your values:
 
 ```bash
-NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=pk_test_XXX
-CLERK_SECRET_KEY=sk_test_XXX
-
-E2E_CLERK_USER_USERNAME=username
-E2E_CLERK_USER_PASSWORD=password
+cp .env.local.example .env.local
 ```
 
 ### Install dependencies
@@ -29,7 +27,7 @@ npm install
 ### Install test dependencies
 
 ```bash
-npx playwright install-deps
+npx playwright install chromium
 ```
 
 ### Run tests
@@ -45,9 +43,9 @@ To run the **GitHub Actions** workflow, set the environment variables in the rep
 ```shell
 # secrets
 CLERK_SECRET_KEY
-E2E_CLERK_USER_USERNAME
 E2E_CLERK_USER_PASSWORD
 
 # vars
 NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY
+E2E_CLERK_USER_EMAIL
 ```

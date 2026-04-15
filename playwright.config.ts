@@ -1,6 +1,8 @@
 import { defineConfig, devices } from "@playwright/test";
 import path from "path";
 
+process.loadEnvFile(".env.local");
+
 // Use process.env.PORT by default and fallback to port 3000
 const PORT = process.env.PORT || 3000;
 
@@ -25,6 +27,11 @@ export default defineConfig({
     {
       name: "global setup",
       testMatch: /global\.setup\.ts/,
+      teardown: "global teardown",
+    },
+    {
+      name: "global teardown",
+      testMatch: /global\.teardown\.ts/,
     },
     {
       name: "Main tests",
