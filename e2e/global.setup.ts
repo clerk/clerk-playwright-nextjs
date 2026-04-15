@@ -37,6 +37,11 @@ setup("global setup", async () => {
       firstName: "Test",
       lastName: "User",
     });
+  } else {
+    // Ensure the password matches in case it was changed manually
+    await client.users.updateUser(users[0].id, {
+      password: process.env.E2E_CLERK_USER_PASSWORD!,
+    });
   }
 
   // Clean up stale test users from a previous run that was
