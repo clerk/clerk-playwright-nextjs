@@ -21,19 +21,19 @@ cp .env.local.example .env.local
 ### Install dependencies
 
 ```bash
-npm install
+pnpm install
 ```
 
 ### Install test dependencies
 
 ```bash
-npx playwright install chromium
+pnpm exec playwright install chromium
 ```
 
 ### Run tests
 
 ```bash
-npm run test:e2e
+pnpm run test:e2e
 ```
 
 ### Run the GitHub Actions workflow
