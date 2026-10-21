@@ -10,14 +10,14 @@
     "test:e2e": "playwright test"
   },
   "dependencies": {
-    "@clerk/nextjs": "^7.9.18",
+    "@clerk/nextjs": "^7.9.17",
     "next": "^16.4.2",
     "react": "^19.3.1",
     "react-dom": "^19.3.1"
   },
   "devDependencies": {
-    "@clerk/backend": "^3.26.0",
-    "@clerk/testing": "^2.2.48",
+    "@clerk/backend": "^3.25.0",
+    "@clerk/testing": "^2.2.47",
     "@playwright/test": "^1.64.1",
     "@types/node": "^25.5.2",
     "@types/react": "^19.3.0",
