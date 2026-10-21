@@ -82,7 +82,7 @@ test.describe("main tests", () => {
 
     // Update the tracked entry with the actual userId for faster cleanup
     const userId = await page.evaluate(
-      () => (window as any).Clerk?.user?.id,
+      () => window.Clerk?.user?.id ?? "",
     );
     updateTrackedUser(signUpEmail, userId);
   });
