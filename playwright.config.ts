@@ -1,7 +1,10 @@
 import { defineConfig, devices } from "@playwright/test";
+import fs from "fs";
 import path from "path";
 
-process.loadEnvFile(".env.local");
+if (fs.existsSync(".env.local")) {
+  process.loadEnvFile(".env.local");
+}
 
 // Use process.env.PORT by default and fallback to port 3000
 const PORT = process.env.PORT || 3000;

@@ -10,21 +10,29 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
+      - name: Set up pnpm
+        uses: pnpm/action-setup@v6
+
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
           node-version-file: ".nvmrc"
+          cache: pnpm
 
       - name: Install dependencies
-        run: npm install
+        run: pnpm install --frozen-lockfile
 
       - name: Install Playwright dependencies
-        run: npx playwright install chromium
+        run: pnpm exec playwright install chromium
 
       - name: Run Playwright E2E Tests
-        run: npm run test:e2e
+        run: pnpm run test:e2e
         env:
           NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY: ${{ vars.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY }}
           CLERK_SECRET_KEY: ${{ secrets.CLERK_SECRET_KEY }}
           E2E_CLERK_USER_EMAIL: ${{ vars.E2E_CLERK_USER_EMAIL }}
           E2E_CLERK_USER_PASSWORD: ${{ secrets.E2E_CLERK_USER_PASSWORD }}
+          NEXT_PUBLIC_CLERK_SIGN_IN_FORCE_REDIRECT_URL: /protected
+          NEXT_PUBLIC_CLERK_SIGN_UP_FORCE_REDIRECT_URL: /protected
+          NEXT_PUBLIC_CLERK_SIGN_IN_URL: /sign-in
+          NEXT_PUBLIC_CLERK_SIGN_UP_URL: /sign-up
